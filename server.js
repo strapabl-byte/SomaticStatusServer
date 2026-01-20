@@ -87,6 +87,9 @@ app.get('/status', (req, res) => {
     // Calculate session uptime
     const sessionUptimeSeconds = Math.floor((Date.now() - currentStatus.sessionStart) / 1000);
 
+    // Calculate server lifetime
+    const serverLifetimeSeconds = Math.floor((Date.now() - serverStartTime) / 1000);
+
     // Calculate time since last refresh
     const timeSinceRefresh = lastRefreshTime ? Math.floor((Date.now() - lastRefreshTime) / 1000) : null;
 
@@ -100,8 +103,10 @@ app.get('/status', (req, res) => {
     res.json({
         ...currentStatus,
         sessionUptimeSeconds,
+        serverLifetimeSeconds,
         timeSinceRefresh,
-        health
+        health,
+        lastUpdateTimestamp: currentStatus.lastUpdate
     });
 });
 
