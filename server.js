@@ -32,6 +32,7 @@ app.post('/update', (req, res) => {
     console.log("Received update:", data);
 
     currentStatus = {
+        ...currentStatus,
         online: true,
         lastUpdate: Date.now(),
         data: data
@@ -52,6 +53,11 @@ app.post('/log', (req, res) => {
     };
 
     console.log("Event log:", logEntry);
+
+    // Track refresh events for health metrics
+    if (message.includes('refreshed') || message.includes('Detected refresh')) {
+        lastRefreshTime = Date.now();
+    }
 
     eventLogs.unshift(logEntry); // Add to beginning
     if (eventLogs.length > MAX_LOGS) {
