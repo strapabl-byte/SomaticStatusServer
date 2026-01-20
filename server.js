@@ -15,12 +15,16 @@ app.use(express.static('public'));
 let currentStatus = {
     online: false,
     lastUpdate: 0,
-    data: {}
+    data: {},
+    sessionStart: Date.now()
 };
 
 // Store event logs (keep last 20 events for performance)
 let eventLogs = [];
 const MAX_LOGS = 20;
+
+// Track refresh history for health metrics
+let lastRefreshTime = null;
 
 // RECEIVE HEARTBEAT
 app.post('/update', (req, res) => {
@@ -71,7 +75,25 @@ app.get('/status', (req, res) => {
         currentStatus.data.status = "Timeout (Offline)";
     }
 
-    res.json(currentStatus);
+    // Calculate session uptime
+    const sessionUptimeSeconds = Math.floor((Date.now() - currentStatus.sessionStart) / 1000);
+
+    // Calculate time since last refresh
+    const timeSinceRefresh = lastRefreshTime ? Math.floor((Date.now() - lastRefreshTime) / 1000) : null;
+
+    // Determine health status based on recent refreshes
+    const refreshes = currentStatus.data.crashes_120s || 0;
+    let health = 'excellent';
+    if (refreshes >= 4) health = 'critical';
+    else if (refreshes >= 2) health = 'warning';
+    else if (refreshes >= 1) health = 'good';
+
+    res.json({
+        ...currentStatus,
+        sessionUptimeSeconds,
+        timeSinceRefresh,
+        health
+    });
 });
 
 // Serve Dashboard

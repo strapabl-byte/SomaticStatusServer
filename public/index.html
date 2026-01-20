@@ -60,6 +60,40 @@
             color: #F59E0B;
         }
 
+        .health-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 15px 0 30px 0;
+            letter-spacing: 1px;
+        }
+
+        .health-badge.excellent {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+            border: 1px solid #10B981;
+        }
+
+        .health-badge.good {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+            border: 1px solid #3B82F6;
+        }
+
+        .health-badge.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+            border: 1px solid #F59E0B;
+        }
+
+        .health-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border: 1px solid #EF4444;
+        }
+
         .meta {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -287,21 +321,48 @@
 
                 const statusEl = document.getElementById('status-text');
                 const lastSeenEl = document.getElementById('last-seen');
+                const healthBadge = document.getElementById('health-badge');
 
                 if (data.online) {
                     statusEl.innerText = "ONLINE";
                     statusEl.className = "status-indicator online";
 
                     document.getElementById('uptime').innerText = formatUptime(data.data.uptime_seconds || 0);
+                    document.getElementById('session-uptime').innerText = formatUptime(data.sessionUptimeSeconds || 0);
                     document.getElementById('pid').innerText = data.data.pid || "---";
                     document.getElementById('crashes').innerText = data.data.crashes_120s || "0";
                     document.getElementById('restarts').innerText = data.data.total_restarts || "0";
+
+                    // Last refresh time
+                    if (data.timeSinceRefresh !== null) {
+                        const minutes = Math.floor(data.timeSinceRefresh / 60);
+                        const seconds = data.timeSinceRefresh % 60;
+                        if (minutes > 0) {
+                            document.getElementById('last-refresh').innerText = `${minutes}m ${seconds}s ago`;
+                        } else {
+                            document.getElementById('last-refresh').innerText = `${seconds}s ago`;
+                        }
+                    } else {
+                        document.getElementById('last-refresh').innerText = "Never";
+                    }
+
+                    // Health status
+                    const healthText = {
+                        'excellent': '● EXCELLENT',
+                        'good': '● GOOD',
+                        'warning': '⚠ WARNING',
+                        'critical': '⚠ CRITICAL'
+                    };
+                    healthBadge.innerText = healthText[data.health] || '● EXCELLENT';
+                    healthBadge.className = `health-badge ${data.health}`;
 
                     lastSeenEl.innerText = "Signal received: Just now";
                     lastSeenEl.style.color = "#444";
                 } else {
                     statusEl.innerText = "OFFLINE";
                     statusEl.className = "status-indicator offline";
+                    healthBadge.innerText = "● OFFLINE";
+                    healthBadge.className = "health-badge critical";
                     lastSeenEl.innerText = "Last signal: " + (data.lastUpdate ? new Date(data.lastUpdate).toLocaleTimeString() : "Never");
                     lastSeenEl.style.color = "#822";
                 }
