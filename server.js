@@ -18,9 +18,9 @@ let currentStatus = {
     data: {}
 };
 
-// Store event logs (keep last 100 events)
+// Store event logs (keep last 20 events for performance)
 let eventLogs = [];
-const MAX_LOGS = 100;
+const MAX_LOGS = 20;
 
 // RECEIVE HEARTBEAT
 app.post('/update', (req, res) => {
