@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.text());
 app.use(express.static('public'));
 
 // Store status in memory (resets on restart, but that's fine for a live dashboard)
@@ -16,6 +17,10 @@ let currentStatus = {
     lastUpdate: 0,
     data: {}
 };
+
+// Store event logs (keep last 100 events)
+let eventLogs = [];
+const MAX_LOGS = 100;
 
 // RECEIVE HEARTBEAT
 app.post('/update', (req, res) => {
@@ -29,6 +34,32 @@ app.post('/update', (req, res) => {
     };
 
     res.json({ success: true });
+});
+
+// RECEIVE EVENT LOG
+app.post('/log', (req, res) => {
+    const message = typeof req.body === 'string' ? req.body : req.body.message;
+    const timestamp = new Date().toISOString();
+
+    const logEntry = {
+        timestamp,
+        message,
+        time: new Date().toLocaleTimeString()
+    };
+
+    console.log("Event log:", logEntry);
+
+    eventLogs.unshift(logEntry); // Add to beginning
+    if (eventLogs.length > MAX_LOGS) {
+        eventLogs = eventLogs.slice(0, MAX_LOGS);
+    }
+
+    res.json({ success: true });
+});
+
+// GET LOGS
+app.get('/logs', (req, res) => {
+    res.json({ logs: eventLogs });
 });
 
 // GET STATUS
