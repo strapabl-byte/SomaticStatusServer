@@ -146,6 +146,92 @@
             background: #333;
             border-radius: 4px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 30px 20px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-bottom: 30px;
+            }
+
+            .status-indicator {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+
+            .meta {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-top: 30px;
+            }
+
+            .meta-item {
+                padding: 12px;
+            }
+
+            .label {
+                font-size: 11px;
+            }
+
+            .value {
+                font-size: 16px;
+            }
+
+            .logs-section {
+                margin-top: 30px;
+            }
+
+            .logs-title {
+                font-size: 12px;
+            }
+
+            .log-container {
+                max-height: 200px;
+                padding: 10px;
+            }
+
+            .log-entry {
+                font-size: 12px;
+                padding: 6px 0;
+            }
+
+            .log-time {
+                display: block;
+                margin-bottom: 3px;
+                font-size: 11px;
+            }
+
+            .log-message {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 16px;
+            }
+
+            .status-indicator {
+                font-size: 36px;
+            }
+
+            .value {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
