@@ -26,6 +26,9 @@ const MAX_LOGS = 20;
 // Track refresh history for health metrics
 let lastRefreshTime = null;
 
+// Server lifetime tracking
+const serverStartTime = Date.now();
+
 // RECEIVE HEARTBEAT
 app.post('/update', (req, res) => {
     const data = req.body;
