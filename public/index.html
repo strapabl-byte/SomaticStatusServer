@@ -257,12 +257,12 @@
                 <span id="pid" class="value">---</span>
             </div>
             <div class="meta-item">
-                <span class="label">CRASHES (Last 2m)</span>
+                <span class="label">REFRESHES (Last 2m)</span>
                 <span id="crashes" class="value">0</span>
             </div>
             <div class="meta-item">
-                <span class="label">VERSION</span>
-                <span id="version" class="value">1.0</span>
+                <span class="label">TOTAL RESTARTS</span>
+                <span id="restarts" class="value">0</span>
             </div>
         </div>
 
@@ -295,6 +295,7 @@
                     document.getElementById('uptime').innerText = formatUptime(data.data.uptime_seconds || 0);
                     document.getElementById('pid').innerText = data.data.pid || "---";
                     document.getElementById('crashes').innerText = data.data.crashes_120s || "0";
+                    document.getElementById('restarts').innerText = data.data.total_restarts || "0";
 
                     lastSeenEl.innerText = "Signal received: Just now";
                     lastSeenEl.style.color = "#444";
