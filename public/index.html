@@ -342,9 +342,18 @@
 
                     document.getElementById('uptime').innerText = formatUptime(data.data.uptime_seconds || 0);
                     document.getElementById('session-uptime').innerText = formatUptime(data.sessionUptimeSeconds || 0);
+                    document.getElementById('lifetime').innerText = formatUptime(data.serverLifetimeSeconds || 0);
                     document.getElementById('pid').innerText = data.data.pid || "---";
                     document.getElementById('crashes').innerText = data.data.crashes_120s || "0";
                     document.getElementById('restarts').innerText = data.data.total_restarts || "0";
+
+                    // Last update timestamp
+                    if (data.lastUpdateTimestamp) {
+                        const updateDate = new Date(data.lastUpdateTimestamp);
+                        document.getElementById('last-update').innerText = updateDate.toLocaleTimeString();
+                    } else {
+                        document.getElementById('last-update').innerText = "Just now";
+                    }
 
                     // Last refresh time
                     if (data.timeSinceRefresh !== null) {
